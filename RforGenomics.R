@@ -38,3 +38,32 @@ mylist= list(a=c(1,2,3),b=c("apple","orange"))
 mylist
 fa=factor(c("a","a","b"))
 levels(fa)=c("0", "1")
+
+surveys2 <- filter(surveys, weight < 5)
+surveys_sml <- select(surveys2, species_id, sex, weight)
+surveys %>%
+filter(year<1995) %>%
+select(year, sex, weight)
+surveys_hindfoot_cm <- surveys$hindfoot_length*10
+surveys$surveys_hindfoot_cm=surveys_hindfoot_cm
+select(surveys, sex)
+surveys %>%
+  group_by(sex) %>%
+  summarize(mean_weight = mean(weight, na.rm = TRUE))
+surveys %>%
+  group_by(sex, species_id) %>%
+  summarize(mean_weight = mean(weight, na.rm = TRUE)) %>%
+  tail()
+surveys %>%
+  filter(!is.na(weight)) %>%
+  group_by(sex, species_id) %>%
+  summarize(mean_weight = mean(weight))
+surveys %>%
+  count(plot_type, sort = TRUE)
+
+ggplot(data = surveys, aes(x = weight, y = hindfoot_length)) +
+  geom_point()
+
+# Assign plot to a variable
+surveys_plot <- ggplot(data = surveys,
+                       mapping = aes(x = weight, y = hindfoot_length))
