@@ -38,7 +38,7 @@ mylist= list(a=c(1,2,3),b=c("apple","orange"))
 mylist
 fa=factor(c("a","a","b"))
 levels(fa)=c("0", "1")
-
++
 surveys2 <- filter(surveys, weight < 5)
 surveys_sml <- select(surveys2, species_id, sex, weight)
 surveys %>%
@@ -64,6 +64,44 @@ surveys %>%
 ggplot(data = surveys, aes(x = weight, y = hindfoot_length)) +
   geom_point()
 
+
 # Assign plot to a variable
 surveys_plot <- ggplot(data = surveys,
                        mapping = aes(x = weight, y = hindfoot_length))
+
+  surveys_plot <- ggplot(data = surveys,
+                         mapping = aes(x = weight, y = hindfoot_length))
+
+# Draw the plot
+surveys_plot +
+  geom_point(alpha=0.1, color = "blue")
+
+ggplot(data = surveys, mapping = aes(x = weight, y = hindfoot_length)) +
+  geom_point(alpha = 0.1, aes(color = species_id))
+ggplot(data = surveys, mapping = aes(x = species_id, y = weight)) +
+  geom_boxplot(alpha = 0) +
+  geom_jitter(alpha = 0.3, color = "tomato")
+yearly_counts <- surveys %>%
+  count(year, genus)
+print(yearly_counts)
+ggplot(data = yearly_counts, aes(x = year, y = n)) +
+  geom_line()
+ggplot(data = yearly_counts, aes(x = year, y = n, color = genus)) +
+  geom_line()
+#facet ting
+ggplot(data = yearly_counts, aes(x = year, y = n)) +
+  geom_line() +
+  facet_wrap(facets = vars(genus))
+ggplot(data=surveys, aes(x=species_id, y=weight))+
+  geom_boxplot()
+#patchwork
+plot_weight <- ggplot(data = surveys, aes(x = species_id, y = weight)) +
+  geom_boxplot() +
+  labs(x = "Species", y = expression(log[10](Weight))) +
+  scale_y_log10()
+
+plot_count <- ggplot(data = yearly_counts, aes(x = year, y = n, color = genus)) +
+  geom_line() +
+  labs(x = "Year", y = "Abundance")
+
+plot_weight / plot_count + plot_layout(heights = c(3, 2))
